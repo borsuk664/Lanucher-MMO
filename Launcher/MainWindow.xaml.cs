@@ -42,7 +42,7 @@ namespace Launcher
             var j = new StreamReader(exePath + "version.json");
             var j1 = j.ReadToEnd();
             ver_actual jj = JsonConvert.DeserializeObject<ver_actual>(j1);
-            textblock.Text = "Build: " + jj.version;
+            textblock.Text = "Version: " + jj.version;
             j.Close();
             Check_Update();
         }
@@ -66,7 +66,7 @@ namespace Launcher
         {
             label.Text = "Checking for updates...";
             var exePath = AppDomain.CurrentDomain.BaseDirectory;
-            var json = new WebClient().DownloadString("http://18.192.38.56/server.json");
+            var json = new WebClient().DownloadString("http://127.0.0.1/files/server.json");
             var j = new StreamReader(exePath + "version.json");
             var j1 = j.ReadToEnd();
             j.Close();
@@ -89,7 +89,7 @@ namespace Launcher
 
         public void Dl()
         {
-            var Uri = "http://18.192.38.56/build.zip";
+            var Uri = "http://127.0.0.1/files/build.zip";
             var exePath = AppDomain.CurrentDomain.BaseDirectory;
             WebClient webClient = new WebClient();
             webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
@@ -124,7 +124,7 @@ namespace Launcher
                 ZipFile.ExtractToDirectory(exePath + "build.zip", exePath);
                 File.Delete(exePath + "build.zip");
                 
-                var json = new WebClient().DownloadString("http://18.192.38.56/server.json");
+                var json = new WebClient().DownloadString("http://127.0.0.1/files/server.json");
                 Console.WriteLine(json);
 
                 //File.Delete(exePath + "version.json");
