@@ -37,14 +37,19 @@ namespace Launcher
             check_ver();
         }
         public void check_ver()
-        {
+        {   
             var exePath = AppDomain.CurrentDomain.BaseDirectory;
-            var j = new StreamReader(exePath + "version.json");
-            var j1 = j.ReadToEnd();
-            ver_actual jj = JsonConvert.DeserializeObject<ver_actual>(j1);
-            textblock.Text = "Build: " + jj.version;
-            j.Close();
-            Check_Update();
+            if (File.Exists(exePath + "version.json"){
+                var j = new StreamReader(exePath + "version.json");
+                var j1 = j.ReadToEnd();
+                ver_actual jj = JsonConvert.DeserializeObject<ver_actual>(j1);
+                textblock.Text = "Build: " + jj.version;
+                j.Close();
+                Check_Update();
+            } else
+            {
+                Dl();
+            }
         }
         public class ver
         {
