@@ -39,7 +39,7 @@ namespace Launcher
         public void check_ver()
         {   
             var exePath = AppDomain.CurrentDomain.BaseDirectory;
-            if (File.Exists(exePath + "version.json"){
+            if (File.Exists(exePath + "version.json")){
                 var j = new StreamReader(exePath + "version.json");
                 var j1 = j.ReadToEnd();
                 ver_actual jj = JsonConvert.DeserializeObject<ver_actual>(j1);
@@ -48,6 +48,12 @@ namespace Launcher
                 Check_Update();
             } else
             {
+                using (FileStream fs = File.Create("version.json"))
+                { 
+                    byte[] info = new UTF8Encoding(true).GetBytes("{'version': 0}");
+                    fs.Write(info, 0, info.Length);
+                }
+                label.Text = "Updating...";
                 Dl();
             }
         }
