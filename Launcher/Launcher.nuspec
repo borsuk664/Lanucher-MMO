@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>Launcher</id>
+    <version>1</version>
+    <title>GownoLauncer</title>
+    <authors>Borsuq/Morfeusz</authors>
+    <owners>Borsuq/Morfeusz</owners>
+    
+
+    <description>despacito</description>
+    <releaseNotes>First test release.</releaseNotes>
+    <copyright>Copyright 2020</copyright>
+    <tags>Tzzzzz</tags>
+  </metadata>
+</package>
