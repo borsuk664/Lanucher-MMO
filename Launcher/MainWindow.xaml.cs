@@ -43,9 +43,14 @@ namespace Launcher
         public MainWindow()
         {
             InitializeComponent();
+            Start();
+        }
+        public void Start()
+        {
             check_ver();
             Check_Update();
         }
+
         public void check_ver()
         {
             var j = new StreamReader(Globals.exePath + "version.json");
@@ -53,6 +58,7 @@ namespace Launcher
             ver jj = JsonConvert.DeserializeObject<ver>(j1);
             textblock.Text = "Version: " + jj.version;
             j.Close();
+            
         }
         public class ver
         {
@@ -123,21 +129,23 @@ namespace Launcher
                 var json = new WebClient().DownloadString(Constants.server_url);
                 var j = new StreamReader(Globals.exePath + "version.json");
                 var j1 = j.ReadToEnd();
+                ver jj = JsonConvert.DeserializeObject<ver>(j1);
                 j.Close();
                 string text = File.ReadAllText("version.json");
                 text = text.Replace((string)j1, (string)json);
                 File.WriteAllText("version.json", text);
                 var chksm = CreateDirectoryMd5(Globals.exefPath);
+                Console.WriteLine(chksm);
                 if (chksm != Constants.checksum)
                 {
                     label.Text = "File verification failed. Repairing...";
                     Dl();
                 }
-                else { ready(); }
-                
+                else 
+                {
+                    ready(); 
+                }
             }
-                
-
         }
         public static string CreateDirectoryMd5(string srcPath)
         {
@@ -160,6 +168,7 @@ namespace Launcher
             label.Text = "Ready to play!";
             Button_Play.IsEnabled = true;
             progressBar.Opacity = 0;
+            check_ver();
         }
     }
 }
