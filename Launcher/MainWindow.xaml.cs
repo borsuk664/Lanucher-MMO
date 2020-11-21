@@ -50,7 +50,6 @@ namespace Launcher
             check_ver();
             Check_Update();
         }
-
         public void check_ver()
         {
             var j = new StreamReader(Globals.exePath + "version.json");
@@ -58,7 +57,6 @@ namespace Launcher
             ver jj = JsonConvert.DeserializeObject<ver>(j1);
             textblock.Text = "Version: " + jj.version;
             j.Close();
-            
         }
         public class ver
         {
