@@ -23,129 +23,143 @@ using System.Threading;
 using System.ComponentModel;
 using System.Reflection.Emit;
 using System.IO.Compression;
+using System.Security.Cryptography;
 
 namespace Launcher
 {
-    /// <summary>
-    /// Logika interakcji dla klasy MainWindow.xaml
-    /// </summary>
+    public static class Globals
+    {
+        public static string exePath = AppDomain.CurrentDomain.BaseDirectory;
+        public static string exefPath = exePath + "build\\";
+    }
+    public static class Constants
+    {
+        public const string server_url = "http://127.0.0.1/files/server.json";
+        public const string build_url = "http://127.0.0.1/files/build.zip";
+        public const string checksum = "5d4a2b158c82af4b978f55b259a46590";
+    }
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
             check_ver();
+            Check_Update();
         }
         public void check_ver()
         {
-            var exePath = AppDomain.CurrentDomain.BaseDirectory;
-            var j = new StreamReader(exePath + "version.json");
+            var j = new StreamReader(Globals.exePath + "version.json");
             var j1 = j.ReadToEnd();
-            ver_actual jj = JsonConvert.DeserializeObject<ver_actual>(j1);
+            ver jj = JsonConvert.DeserializeObject<ver>(j1);
             textblock.Text = "Version: " + jj.version;
             j.Close();
-            Check_Update();
         }
         public class ver
-        {
-            public string version { get; set; }
-
-        }
-        public class ver_actual
         {
             public string version { get; set; }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var exePath = AppDomain.CurrentDomain.BaseDirectory;
-            Console.WriteLine(exePath);
-            var exefPath = exePath + "build\\";
-            Process.Start(exefPath + "mmo.exe");
+            Console.WriteLine(Globals.exePath);
+            Process.Start(Globals.exefPath + "mmo.exe");
         }
         public void Check_Update()
         {
             label.Text = "Checking for updates...";
-            var exePath = AppDomain.CurrentDomain.BaseDirectory;
-            var json = new WebClient().DownloadString("http://127.0.0.1/files/server.json");
-            var j = new StreamReader(exePath + "version.json");
+            var json = new WebClient().DownloadString(Constants.server_url);
+            var j = new StreamReader(Globals.exePath + "version.json");
             var j1 = j.ReadToEnd();
             j.Close();
-            ver_actual jj = JsonConvert.DeserializeObject<ver_actual>(j1);
+            ver jj = JsonConvert.DeserializeObject<ver>(j1);
             ver Server = JsonConvert.DeserializeObject<ver>(json);
             if (jj.version == Server.version)
             {
-                Button_Play.IsEnabled = true;
-                label.Text = "Ready to play!";
-                progressBar.Opacity = 0;
+                var chksm = CreateDirectoryMd5(Globals.exefPath);
+                Console.WriteLine(chksm);
+                if (chksm != Constants.checksum)
+                {
+                    label.Text = "File verification failed. Repairing...";
+                    Dl();
+                }
+                else { ready(); }
             }
             else
             {
-                ///var Uri = "http://127.0.0.1/files/Aslains_WoT_Modpack_Installer_v.1.10.0.2_02.exe";
                 Button_Play.IsEnabled = false;
                 Dl();
-
             }
         }
-
         public void Dl()
         {
-            var Uri = "http://127.0.0.1/files/build.zip";
-            var exePath = AppDomain.CurrentDomain.BaseDirectory;
+            //var exePath = AppDomain.CurrentDomain.BaseDirectory;
             WebClient webClient = new WebClient();
             webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
             webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-            webClient.DownloadFileAsync(new Uri(Uri), exePath + "build.zip");
+            webClient.DownloadFileAsync(new Uri(Constants.build_url), Globals.exePath + "build.zip");
         }
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             progressBar.Value = e.ProgressPercentage;
         }
-
         private void Completed(object sender, EventArgs e)
         {
             label.Text = "Download completed!";
-            ///Button_Play.IsEnabled = true;
             extract();
         }
         public void extract()
         {
             label.Text = "Extracting update";
-            var exePath = AppDomain.CurrentDomain.BaseDirectory;
-            string path = exePath + "build";
             try
             {
-                if (Directory.Exists(path))
+                if (Directory.Exists(Globals.exefPath))
                 {
-                    Directory.Delete(path, true);
+                    Directory.Delete(Globals.exefPath, true);
                 }
             }
             finally
             {
-                ZipFile.ExtractToDirectory(exePath + "build.zip", exePath);
-                File.Delete(exePath + "build.zip");
-                
-                var json = new WebClient().DownloadString("http://127.0.0.1/files/server.json");
-                Console.WriteLine(json);
-
-                //File.Delete(exePath + "version.json");
-                //using (StreamWriter sw = File.CreateText(exePath))
-                //{
-                //    sw.WriteLine(json);
-                //}
-                var j = new StreamReader(exePath + "version.json");
+                ZipFile.ExtractToDirectory(Globals.exePath + "build.zip", Globals.exePath);
+                File.Delete(Globals.exePath + "build.zip");
+                var json = new WebClient().DownloadString(Constants.server_url);
+                var j = new StreamReader(Globals.exePath + "version.json");
                 var j1 = j.ReadToEnd();
-                ver_actual jj = JsonConvert.DeserializeObject<ver_actual>(j1);
-                Console.WriteLine(j);
                 j.Close();
                 string text = File.ReadAllText("version.json");
                 text = text.Replace((string)j1, (string)json);
                 File.WriteAllText("version.json", text);
-                label.Text = "Ready to play!";
-                Button_Play.IsEnabled = true;
-                progressBar.Opacity = 0;
-                check_ver();
+                var chksm = CreateDirectoryMd5(Globals.exefPath);
+                if (chksm != Constants.checksum)
+                {
+                    label.Text = "File verification failed. Repairing...";
+                    Dl();
+                }
+                else { ready(); }
+                
+            }
+                
+
+        }
+        public static string CreateDirectoryMd5(string srcPath)
+        {
+            var filePaths = Directory.GetFiles(srcPath, "*", SearchOption.AllDirectories).OrderBy(p => p).ToArray();
+            using (var md5 = MD5.Create())
+            {
+                foreach (var filePath in filePaths)
+                {
+                    byte[] pathBytes = Encoding.UTF8.GetBytes(filePath);
+                    md5.TransformBlock(pathBytes, 0, pathBytes.Length, pathBytes, 0);
+                    byte[] contentBytes = File.ReadAllBytes(filePath);
+                    md5.TransformBlock(contentBytes, 0, contentBytes.Length, contentBytes, 0);
+                }
+                md5.TransformFinalBlock(new byte[0], 0, 0);
+                return BitConverter.ToString(md5.Hash).Replace("-", "").ToLower();
             }
         }
-
+        public void ready()
+        {
+            label.Text = "Ready to play!";
+            Button_Play.IsEnabled = true;
+            progressBar.Opacity = 0;
+        }
     }
 }
