@@ -34,3 +34,9 @@ C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\obj\Release\Launc
 C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\obj\Release\Launcher.csproj.CopyComplete
 C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\obj\Release\Launcher.exe
 C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\obj\Release\Launcher.pdb
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Release\Microsoft.Dynamic.dll
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Release\Microsoft.Scripting.dll
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Release\Microsoft.Scripting.Metadata.dll
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Release\Microsoft.Dynamic.xml
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Release\Microsoft.Scripting.xml
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Release\Microsoft.Scripting.Metadata.xml

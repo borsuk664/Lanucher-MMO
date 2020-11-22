@@ -106,3 +106,9 @@ C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\obj\Debug\Launche
 C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\obj\Debug\Launcher.csproj.CopyComplete
 C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\obj\Debug\Launcher.exe
 C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\obj\Debug\Launcher.pdb
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Debug\Microsoft.Dynamic.dll
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Debug\Microsoft.Scripting.dll
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Debug\Microsoft.Scripting.Metadata.dll
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Debug\Microsoft.Dynamic.xml
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Debug\Microsoft.Scripting.xml
+C:\Users\Administrator\source\repos\Lanucher\Lanucher\Launcher\bin\Debug\Microsoft.Scripting.Metadata.xml
